@@ -12,6 +12,8 @@ The nodes's data is a void pointer to whatever. This means that the linked list 
 If you actually cared to test this, I would be surprised if you didn't find a lot of bugs.
 
 # Documentation
+(sorry, but I can't really be bothered to look up code markdown ;) )
+
 To create a linked list you do
 
 struct mlist *head = NULL;
