@@ -5,7 +5,14 @@
 
 void printint(void* data)
 {
-    printf("%d\n", *((int*)data));
+    printf("%d", *((int*)data));
+}
+
+void printall(struct mlist *list)
+{
+    printf("length %d: ", mlist_length(list));
+    mlist_map(list, &printint);
+    printf("\n");
 }
 
 void freeall(void* data)
@@ -18,55 +25,29 @@ int main()
     struct mlist *intlist = NULL;
     int *temp;
 
-    temp = malloc(sizeof *temp);
-    *temp = 7;
-    mlist_prepend(&intlist, temp);
-
-    temp = malloc(sizeof *temp);
-    *temp = 8;
-    mlist_prepend(&intlist, temp);
-
-    temp = malloc(sizeof *temp);
-    *temp = 9;
-    mlist_prepend(&intlist, temp);
-    
-    printf("list is %d elements long\n", mlist_length(intlist));
-    
-    int len = mlist_length(intlist);
-
-    for(int i = 0; i < len; i++)
+    for (int i = 0; i < 10; i++)
     {
-	printf("intlist[%d] = %d\n", i, *(int*)mlist_index(intlist, i));
+	temp = malloc(sizeof *temp);
+	*temp = i;
+	mlist_append(&intlist, temp);
     }
 
-    temp = malloc(sizeof *temp);
-    *temp = 1;
-    mlist_append(intlist, temp);
+    printall(intlist);
 
-    temp = malloc(sizeof *temp);
-    *temp = 2;
-    mlist_append(intlist, temp);
+    free(mlist_remove(&intlist, 0));
 
-    temp = malloc(sizeof *temp);
-    *temp = 3;
-    mlist_append(intlist, temp);
+    free(mlist_remove(&intlist, 5));
 
-    mlist_map(intlist, &printint);
-    
-    printf("list is %d elements long\n", mlist_length(intlist));
+    printall(intlist);
 
-    free(mlist_remove(intlist, 1));
-
-    mlist_map(intlist, &printint);
-
-    free(mlist_pop(intlist));
-    free(mlist_pop(intlist));
-
-    mlist_map(intlist, &printint);
+    printf("intlist[4] = %d\n", *(int*)mlist_index(intlist, 4));
 
     mlist_map(intlist, &freeall);
-
     mlist_destroy(&intlist);
+
+    printall(intlist);
+
+    printf("head = %p\n", intlist);
 
     return 0;
 }

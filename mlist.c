@@ -14,7 +14,7 @@ void mlist_prepend(struct mlist **list, void *data)
     *list = newnode;
 }
 
-void mlist_append(struct mlist *list, void *data)
+void mlist_append(struct mlist **list, void *data)
 {
 
     struct mlist *newnode = malloc(sizeof (struct mlist));
@@ -22,12 +22,12 @@ void mlist_append(struct mlist *list, void *data)
 
     newnode->next = NULL;
 
-    struct mlist *cursor = list;
+    struct mlist **cursor = list;
 
-    while(cursor->next != NULL)
-	cursor = cursor->next;
+    while((*cursor) != NULL)
+	cursor = &((*cursor)->next);
 
-    cursor->next = newnode;
+    (*cursor) = newnode;
 }
 
 void mlist_map(struct mlist *list, void (*func)(void*))
@@ -72,7 +72,7 @@ void* mlist_index(struct mlist *list, int index)
     return list->data;
 }
 
-void* mlist_remove(struct mlist *list, int index)
+void* mlist_remove(struct mlist **list, int index)
 {
     if (index < 0)
     {
@@ -80,30 +80,29 @@ void* mlist_remove(struct mlist *list, int index)
 	return NULL;
     }
 
-    if (index >= mlist_length(list))
+    if (index >= mlist_length(*list))
     {
 	printf("mlist_remove error: out of bounds\n");
 	return NULL;
     }
     
-    struct mlist *cursor = list;
-
-    index--;
+    struct mlist **cursor = list;
+    
     while(index--)
     {
-	cursor = cursor->next;
+	cursor = &((*cursor)->next);
     }
     
-    struct mlist *todel = cursor->next;
+    struct mlist *todel = (*cursor);
     void *toreturn = todel->data;
-    cursor->next = cursor->next->next;
+    (*cursor) = todel->next;
     free(todel);
     return toreturn;
 }
 
-void* mlist_pop(struct mlist *list)
+void* mlist_pop(struct mlist **list)
 {
-    return mlist_remove(list, mlist_length(list)-1);
+    return mlist_remove(list, mlist_length(*list)-1);
 }
 
 void mlist_destroy(struct mlist **list)
@@ -112,8 +111,8 @@ void mlist_destroy(struct mlist **list)
 
     for (int i = 0; i < len-1; i++)
     {
-	mlist_pop(*list);
+	mlist_pop(list);
     }
 
-    (*list) = NULL;
+    *list = NULL;
 }
