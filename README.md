@@ -13,10 +13,11 @@ If you actually cared to test this, I would be surprised if you didn't find a lo
 
 # Documentation
 (sorry, but I can't really be bothered to look up code markdown ;) )
+Also I added a typedef for a pointer to it
 
 To create a linked list you do
 
-struct mlist *head = NULL;
+mlist head = NULL;
 
 Congratulations you now have an empty list.
 
@@ -42,7 +43,7 @@ mlist_pop(&head); performs remove on the last element
 
 mlist_destroy(&head) destroys the list but will not free any data pointers
 
-mlist_map() will perform a function to all data pointers of a list.
+mlist_map will perform a function to all data pointers of a list.
 
 void freeptr(void *data)
 {

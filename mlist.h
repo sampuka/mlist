@@ -1,26 +1,26 @@
 #ifndef MLIST_H
 #define MLIST_H
 
-struct mlist
+typedef struct mlist_
 {
-    struct mlist *next;
+    struct mlist_ *next;
     void *data;
-};
+} *mlist;
 
-void mlist_prepend(struct mlist **list, void *data);
+void mlist_prepend(mlist *head, void *data);
 
-void mlist_append(struct mlist **list, void *data);
+void mlist_append(mlist *head, void *data);
 
-void mlist_map(struct mlist *list, void (*func)(void*));
+void mlist_map(mlist head, void (*func)(void*));
 
-int mlist_length(struct mlist *list);
+int mlist_length(mlist head);
 
-void* mlist_index(struct mlist *list, int index);
+void* mlist_index(mlist head, int index);
 
-void* mlist_remove(struct mlist **list, int index);
+void* mlist_remove(mlist *head, int index);
 
-void* mlist_pop(struct mlist **list);
+void* mlist_pop(mlist *head);
 
-void mlist_destroy(struct mlist **list);
+void mlist_destroy(mlist *head);
 
 #endif

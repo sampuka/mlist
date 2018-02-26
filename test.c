@@ -8,10 +8,10 @@ void printint(void* data)
     printf("%d", *((int*)data));
 }
 
-void printall(struct mlist *list)
+void printall(mlist head)
 {
-    printf("length %d: ", mlist_length(list));
-    mlist_map(list, &printint);
+    printf("length %d: ", mlist_length(head));
+    mlist_map(head, &printint);
     printf("\n");
 }
 
@@ -22,7 +22,7 @@ void freeall(void* data)
 
 int main()
 {
-    struct mlist *intlist = NULL;
+    mlist intlist = NULL;
     int *temp;
 
     for (int i = 0; i < 10; i++)

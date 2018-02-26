@@ -3,26 +3,26 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void mlist_prepend(struct mlist **list, void *data)
+void mlist_prepend(mlist *head, void *data)
 {
-    struct mlist *newnode = malloc(sizeof (struct mlist));
+    mlist newnode = malloc(sizeof (struct mlist_));
 
-    newnode->next = *list;
+    newnode->next = *head;
 
     newnode->data = data;
 
-    *list = newnode;
+    *head = newnode;
 }
 
-void mlist_append(struct mlist **list, void *data)
+void mlist_append(mlist *head, void *data)
 {
 
-    struct mlist *newnode = malloc(sizeof (struct mlist));
+    mlist newnode = malloc(sizeof (struct mlist_));
     newnode->data = data;
 
     newnode->next = NULL;
 
-    struct mlist **cursor = list;
+    mlist *cursor = head;
 
     while((*cursor) != NULL)
 	cursor = &((*cursor)->next);
@@ -30,28 +30,28 @@ void mlist_append(struct mlist **list, void *data)
     (*cursor) = newnode;
 }
 
-void mlist_map(struct mlist *list, void (*func)(void*))
+void mlist_map(mlist head, void (*func)(void*))
 {
-    while(list != NULL)
+    while(head != NULL)
     {
-	func(list->data);
-	list = list->next;
+	func(head->data);
+	head = head->next;
     }
 }
 
-int mlist_length(struct mlist *list)
+int mlist_length(mlist head)
 {
     int count = 0;
-    while(list != NULL)
+    while(head != NULL)
     {
-	list = list->next;
+	head = head->next;
 	count++;
     }
 
     return count;
 }
 
-void* mlist_index(struct mlist *list, int index)
+void* mlist_index(mlist head, int index)
 {
     if (index < 0)
     {
@@ -59,7 +59,7 @@ void* mlist_index(struct mlist *list, int index)
 	return NULL;
     }
 
-    if (index >= mlist_length(list))
+    if (index >= mlist_length(head))
     {
 	printf("mlist_index error: out of bounds\n");
 	return NULL;
@@ -67,12 +67,12 @@ void* mlist_index(struct mlist *list, int index)
     
     while(index--)
     {
-	list = list->next;
+	head = head->next;
     }
-    return list->data;
+    return head->data;
 }
 
-void* mlist_remove(struct mlist **list, int index)
+void* mlist_remove(mlist *head, int index)
 {
     if (index < 0)
     {
@@ -80,39 +80,39 @@ void* mlist_remove(struct mlist **list, int index)
 	return NULL;
     }
 
-    if (index >= mlist_length(*list))
+    if (index >= mlist_length(*head))
     {
 	printf("mlist_remove error: out of bounds\n");
 	return NULL;
     }
     
-    struct mlist **cursor = list;
+    mlist *cursor = head;
     
     while(index--)
     {
 	cursor = &((*cursor)->next);
     }
     
-    struct mlist *todel = (*cursor);
+    mlist todel = (*cursor);
     void *toreturn = todel->data;
     (*cursor) = todel->next;
     free(todel);
     return toreturn;
 }
 
-void* mlist_pop(struct mlist **list)
+void* mlist_pop(mlist *head)
 {
-    return mlist_remove(list, mlist_length(*list)-1);
+    return mlist_remove(head, mlist_length(*head)-1);
 }
 
-void mlist_destroy(struct mlist **list)
+void mlist_destroy(mlist *head)
 {
-    int len = mlist_length(*list);
+    int len = mlist_length(*head);
 
     for (int i = 0; i < len-1; i++)
     {
-	mlist_pop(list);
+	mlist_pop(head);
     }
 
-    *list = NULL;
+    *head = NULL;
 }
